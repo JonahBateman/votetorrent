@@ -24,24 +24,24 @@ function StackLayout() {
 								<Pressable>
 									<FontAwesome name="bars" size={24} color={colors.text} />
 								</Pressable>
-								<Text
-									style={{
-										fontSize: 18,
-										color: colors.text,
-									}}
-								>
-									Username @ Authority Name
-								</Text>
-								<Pressable>
-									<FontAwesome
-										name="user-circle"
-										size={24}
-										color={colors.text}
-									/>
-								</Pressable>
 							</View>
 						),
-						headerTitle: "",
+						headerRight: () => (
+							<Pressable>
+								<FontAwesome name="user-circle" size={24} color={colors.text} />
+							</Pressable>
+						),
+						headerTitle: () => (
+							<Text
+								style={{
+									color: colors.text,
+									textAlign: "center",
+									width: "100%",
+								}}
+							>
+								Username @ Authority Name
+							</Text>
+						),
 						headerShadowVisible: false,
 					}}
 				/>
