@@ -12,7 +12,7 @@ export default function TabLayout() {
 				options={{
 					title: t("elections"),
 					tabBarIcon: ({ color, size }) => (
-						<FontAwesome name="calendar" size={size} color={color} />
+						<FontAwesome name="check-square-o" size={size} color={color} />
 					),
 				}}
 			/>
@@ -31,6 +31,15 @@ export default function TabLayout() {
 					title: t("authorities"),
 					tabBarIcon: ({ color, size }) => (
 						<FontAwesome name="building" size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="settings"
+				options={{
+					title: t("settings"),
+					tabBarIcon: ({ color, size }) => (
+						<FontAwesome name="gear" size={size} color={color} />
 					),
 				}}
 			/>

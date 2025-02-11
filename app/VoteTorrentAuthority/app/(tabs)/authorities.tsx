@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, View, ActivityIndicator } from "react-native";
 import AuthorityCard from "../../components/AuthorityCard";
 import { CollapsibleSection } from "../../components/CollapsibleSection";
@@ -13,6 +14,7 @@ export default function Authorities() {
 	const { data: authorities, isLoading } = useGetAuthoritiesQuery();
 	const [pinAuthority] = usePinAuthorityMutation();
 	const [searchText, setSearchText] = useState("");
+	const { t } = useTranslation();
 
 	const pinnedAuthorities = authorities?.filter((a) => a.isPinned) ?? [];
 	const unpinnedAuthorities =
@@ -51,13 +53,13 @@ export default function Authorities() {
 				))
 			) : (
 				<ThemedText style={styles.emptyText}>
-					No pinned authorities yet
+					{t("noPinnedAuthorities")}
 				</ThemedText>
 			)}
 
 			<View style={styles.buttonContainer}>
 				<ChipButton
-					label="ADD AUTHORITY"
+					label={t("addAuthority")}
 					icon="plus-circle"
 					onPress={() => {
 						console.log("Add authority pressed");
@@ -66,8 +68,8 @@ export default function Authorities() {
 			</View>
 
 			<CollapsibleSection
-				title="Find"
-				searchPlaceholder="Filter authorities..."
+				title={t("find")}
+				searchPlaceholder={t("filterAuthorities")}
 				onSearch={setSearchText}
 			>
 				{unpinnedAuthorities.length > 0 ? (
