@@ -1,4 +1,4 @@
-import { Theme } from '@react-navigation/native';
+import { ExtendedTheme, Theme } from '@react-navigation/native';
 
 const fonts = {
   regular: {
@@ -19,28 +19,56 @@ const fonts = {
   },
 };
 
-export const lightTheme: Theme = {
-  dark: false,
-  colors: {
-    primary: '#007AFF',
-    background: '#FFFFFF',
-    card: '#FFFFFF',
-    text: '#000000',
-    border: '#E5E5EA',
-    notification: '#FF3B30',
-  },
-  fonts,
+declare module '@react-navigation/native' {
+  export type ExtendedTheme = Theme & {
+    colors: {
+      primary: string;
+      background: string;
+      card: string;
+      text: string;
+      border: string;
+      notification: string;
+			secondary: string;
+			accent: string;
+			error: string;
+			warning: string;
+			contrast: string;
+		};
+	};
+}
+
+export const lightTheme: ExtendedTheme = {
+	dark: false,
+	colors: {
+		primary: "#007AFF",
+		background: "#FFFFFF",
+		card: "#FFFFFF",
+		text: "#000000",
+		border: "#E5E5EA",
+		notification: "#FF3B30",
+		secondary: "#000000",
+		accent: "#d9d9d9",
+		error: "#FF3B30",
+		warning: "#ECE81A",
+		contrast: "#262626",
+	},
+	fonts,
 };
 
-export const darkTheme: Theme = {
-  dark: true,
-  colors: {
-    primary: '#0A84FF',
-    background: '#000000',
-    card: '#1C1C1E',
-    text: '#FFFFFF',
-    border: '#38383A',
-    notification: '#FF453A',
-  },
-  fonts,
-}; 
+export const darkTheme: ExtendedTheme = {
+	dark: true,
+	colors: {
+		primary: "#0A84FF",
+		background: "#121212",
+		card: "#1C1C1E",
+		text: "#FFFFFF",
+		border: "#1C1C1E",
+		notification: "#FF453A",
+		secondary: "#FFFFFF",
+		accent: "#717171",
+		error: "#FF453A",
+		warning: "#b57d00",
+		contrast: "#dadada",
+	},
+	fonts,
+};

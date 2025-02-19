@@ -1,26 +1,27 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { ThemedText } from "./ThemedText";
-import { useTheme } from "@react-navigation/native";
+import { ExtendedTheme, useTheme } from "@react-navigation/native";
 
 interface ChipButtonProps {
 	label: string;
-	icon: string;
+	icon: keyof typeof FontAwesome6.glyphMap;
 	onPress: () => void;
 }
 
 export function ChipButton({ label, icon, onPress }: ChipButtonProps) {
-	const { colors } = useTheme();
+	const { colors } = useTheme() as ExtendedTheme;
 
 	return (
 		<TouchableOpacity
-			onPress={onPress}
-			style={[styles.container, { backgroundColor: colors.card }]}
+			// This is using onPressIn because of a bug with onPress in headers
+			onPressIn={onPress}
+			style={[styles.container, { backgroundColor: colors.accent }]}
 		>
 			<ThemedText>{label}</ThemedText>
-			<FontAwesome
-				name={icon as any}
+			<FontAwesome6
+				name={icon}
 				size={14}
 				color={colors.text}
 				style={styles.icon}
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 8,
+		paddingVertical: 2,
 		paddingHorizontal: 12,
 		borderRadius: 20,
 		alignSelf: "flex-start",

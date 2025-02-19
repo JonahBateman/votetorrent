@@ -1,20 +1,32 @@
 import React from "react";
-import { Button, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+	Button,
+	StyleSheet,
+	View,
+	Text,
+	ActivityIndicator,
+} from "react-native";
 import { Stack, useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
-import { Camera, useCameraPermissions, CameraView } from "expo-camera";
+import { useCameraPermissions, CameraView, CameraType } from "expo-camera";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 export default function CameraScreen() {
 	const { colors } = useTheme();
 	const { t } = useTranslation();
 	const router = useRouter();
+	const [facing, setFacing] = useState<CameraType>("back");
 	const [permission, requestPermission] = useCameraPermissions();
 
 	if (!permission) {
 		// Camera permissions are still loading
-		return <View />;
+		return (
+			<View style={styles.container}>
+				<ActivityIndicator size="large" color={colors.text} />
+			</View>
+		);
 	}
 
 	if (!permission.granted) {
@@ -32,20 +44,23 @@ export default function CameraScreen() {
 			<Stack.Screen
 				options={{
 					headerLeft: () => (
-						<FontAwesome
-							name="close"
+						<FontAwesome6
+							name="xmark"
 							size={24}
 							color={colors.text}
-							onPress={() => router.back()}
+							// This is using onPressIn because of a bug with onPress in headers
+							onPressIn={() => router.back()}
 						/>
 					),
 					title: t("scanQrCode"),
+					headerTitleAlign: "center",
 					headerShadowVisible: false,
 				}}
 			/>
+			<Text>Hello</Text>
 			<View style={styles.container}>
 				{/* TODO get this working right */}
-				<CameraView style={styles.camera}></CameraView>
+				<CameraView style={styles.camera} facing={facing}></CameraView>
 			</View>
 		</>
 	);

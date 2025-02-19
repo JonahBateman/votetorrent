@@ -1,53 +1,53 @@
-import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, View, ActivityIndicator } from "react-native";
-import AuthorityCard from "../../components/AuthorityCard";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { InfoCard } from "../../components/InfoCard";
 import { CollapsibleSection } from "../../components/CollapsibleSection";
 import { ChipButton } from "../../components/ChipButton";
 import { ThemedText } from "../../components/ThemedText";
+import { useDispatch, useSelector } from "react-redux";
 import {
-	useGetAuthoritiesQuery,
-	usePinAuthorityMutation,
-} from "@/store/api/authorityApi";
+	selectPinnedAuthorities,
+	togglePin,
+	selectFilteredUnpinnedAuthorities,
+} from "@/store/slices/authoritySlice";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { RootState } from "@/store";
 
 export default function Authorities() {
-	const { data: authorities, isLoading } = useGetAuthoritiesQuery();
-	const [pinAuthority] = usePinAuthorityMutation();
+	const dispatch = useDispatch();
 	const [searchText, setSearchText] = useState("");
+	const pinnedAuthorities = useSelector(selectPinnedAuthorities);
+	const unpinnedAuthorities = useSelector((state: RootState) =>
+		selectFilteredUnpinnedAuthorities(state, searchText)
+	);
 	const { t } = useTranslation();
+	const router = useRouter();
 
-	const pinnedAuthorities = authorities?.filter((a) => a.isPinned) ?? [];
-	const unpinnedAuthorities =
-		authorities?.filter(
-			(a) =>
-				!a.isPinned && a.title.toLowerCase().includes(searchText.toLowerCase())
-		) ?? [];
-
-	const handlePin = async (id: string) => {
-		try {
-			await pinAuthority(id);
-		} catch (error) {
-			console.error("Failed to pin authority:", error);
-		}
+	const handlePinToggle = (id: string) => {
+		dispatch(togglePin(id));
 	};
-
-	if (isLoading) {
-		return (
-			<View style={styles.centerContainer}>
-				<ActivityIndicator size="large" />
-			</View>
-		);
-	}
 
 	return (
 		<ScrollView style={styles.container}>
 			{pinnedAuthorities.length > 0 ? (
 				pinnedAuthorities.map((authority) => (
-					<AuthorityCard
+					<InfoCard
 						key={authority.id}
-						authority={authority}
+						image={authority.image}
+						title={authority.title}
+						additionalInfo={[
+							{ label: "CID", value: authority.cid },
+							{ label: "Address", value: authority.address },
+						]}
+						icon={"chevron-right"}
 						onPress={() => {
-							console.log(`Pressed ${authority.title}`);
+							router.push({
+								pathname: "/authorityDetails",
+								params: {
+									authorityId: authority.id,
+								},
+							});
 						}}
 					/>
 				))
@@ -60,7 +60,7 @@ export default function Authorities() {
 			<View style={styles.buttonContainer}>
 				<ChipButton
 					label={t("addAuthority")}
-					icon="plus-circle"
+					icon="circle-plus"
 					onPress={() => {
 						console.log("Add authority pressed");
 					}}
@@ -74,10 +74,16 @@ export default function Authorities() {
 			>
 				{unpinnedAuthorities.length > 0 ? (
 					unpinnedAuthorities.map((authority) => (
-						<AuthorityCard
+						<InfoCard
 							key={authority.id}
-							authority={authority}
-							onPress={() => handlePin(authority.id)}
+							image={authority.image}
+							title={authority.title}
+							additionalInfo={[
+								{ label: "CID", value: authority.cid },
+								{ label: "Address", value: authority.address },
+							]}
+							icon={"thumb-tack"}
+							onPress={() => handlePinToggle(authority.id)}
 						/>
 					))
 				) : (

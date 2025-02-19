@@ -3,6 +3,9 @@ export interface Authority {
 	id: string;
 	image: any;
 	title: string;
-	subtitle: string;
+	domainName: string;
+	cid: string;
+	address: string;
+	signature: string;
 	isPinned?: boolean;
 }

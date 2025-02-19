@@ -25,7 +25,7 @@ export function CollapsibleSection({
 		<View style={styles.container}>
 			<TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
 				<View style={styles.titleContainer}>
-					<ThemedText type="subtitle">{title}</ThemedText>
+					<ThemedText type="title">{title}</ThemedText>
 					<FontAwesome
 						color={colors.text}
 						name={isExpanded ? "chevron-up" : "chevron-down"}
@@ -37,7 +37,11 @@ export function CollapsibleSection({
 			{isExpanded && (
 				<>
 					<View
-						style={[styles.searchContainer, { backgroundColor: colors.card }]}
+						style={[
+							styles.searchContainer,
+							{ backgroundColor: colors.card },
+							{ borderColor: colors.border },
+						]}
 					>
 						<FontAwesome name="search" size={16} color={colors.text} />
 						<TextInput
@@ -77,6 +81,7 @@ const styles = StyleSheet.create({
 		marginTop: 8,
 		marginBottom: 8,
 		borderRadius: 32,
+		borderWidth: 1,
 	},
 	searchInput: {
 		flex: 1,

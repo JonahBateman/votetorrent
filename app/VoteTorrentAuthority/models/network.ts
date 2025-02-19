@@ -1,5 +1,5 @@
 export interface Network {
 	id: string;
 	name: string;
-	url: string;
+	address: string;
 } 

@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "VoteTorrentAuthority",
-    "slug": "VoteTorrentAuthority",
+    "owner": "gotchoices",
+    "slug": "votetorrent-authority",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +16,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.gotchoices.votetorrentauthority"
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +49,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "deefb1f7-c991-46a8-9008-fe15235e12e3"
+      }
     }
   }
 }

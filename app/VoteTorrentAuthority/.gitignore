@@ -36,4 +36,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-package-lock.json
+.eas.json.local
+yarn.lock
+credentials.json

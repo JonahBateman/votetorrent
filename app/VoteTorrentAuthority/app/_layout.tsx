@@ -1,6 +1,6 @@
 import React from "react";
 import "../i18n";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import {
 	Pressable,
 	Text,
@@ -15,17 +15,19 @@ import { StatusBar } from "expo-status-bar";
 import { darkTheme, lightTheme } from "../theme/themes";
 import { store } from "../store";
 import { Network } from "../models";
+import { showToast } from "../components/Toast";
+import { useTranslation } from "react-i18next";
 
 const recentNetworks: Network[] = [
 	{
 		id: "1",
 		name: "Utah Network",
-		url: "https://utah.gov",
+		address: "/dns/utah.gov/tcp/443/p2p/QmZjkls123",
 	},
 	{
 		id: "2",
 		name: "Idaho Network",
-		url: "https://idaho.gov",
+		address: "/dns/idaho.gov/tcp/443/p2p/QmZjkls123",
 	},
 ];
 
@@ -53,6 +55,21 @@ function SplitHeaderTitle() {
 function StackLayout() {
 	const { colors } = useTheme();
 	const router = useRouter();
+	const { t } = useTranslation();
+
+	const handleNetworkPress = () => {
+		console.log("Network pressed");
+		showToast({
+			message: t("switchingNetworks"),
+			haptic: true,
+		});
+		router.push({
+			pathname: "/networks",
+			params: {
+				recentNetworks: JSON.stringify(recentNetworks),
+			},
+		});
+	};
 
 	return (
 		<>
@@ -62,22 +79,22 @@ function StackLayout() {
 					name="(tabs)"
 					options={{
 						headerLeft: () => (
-							<Pressable
-								onPress={() =>
-									router.push({
-										pathname: "/networks",
-										params: {
-											recentNetworks: JSON.stringify(recentNetworks),
-										},
-									})
-								}
-							>
-								<FontAwesome name="cloud" size={24} color={colors.text} />
+							// This is using onPressIn because of a bug with onPress in headers
+							<Pressable onPressIn={handleNetworkPress}>
+								<FontAwesome6
+									name="circle-nodes"
+									size={24}
+									color={colors.text}
+								/>
 							</Pressable>
 						),
 						headerRight: () => (
 							<Pressable>
-								<FontAwesome name="user-circle" size={24} color={colors.text} />
+								<FontAwesome6
+									name="circle-user"
+									size={24}
+									color={colors.text}
+								/>
 							</Pressable>
 						),
 						headerTitle: () => <SplitHeaderTitle />,

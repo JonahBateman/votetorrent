@@ -1,5 +1,5 @@
-import { FontAwesome } from "@expo/vector-icons";
-import { useTheme } from "@react-navigation/native";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { ExtendedTheme, useTheme } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
@@ -12,12 +12,12 @@ import {
 	View,
 } from "react-native";
 
-import { NetworkCard } from "../components/NetworkCard";
+import { InfoCard } from "../components/InfoCard";
 import { ThemedText } from "../components/ThemedText";
 import { Network } from "../models";
 
 export default function Networks() {
-	const { colors } = useTheme();
+	const { colors } = useTheme() as ExtendedTheme;
 	const router = useRouter();
 	const { t } = useTranslation();
 	const { recentNetworks } = useLocalSearchParams<{
@@ -38,8 +38,8 @@ export default function Networks() {
 			<Stack.Screen
 				options={{
 					headerLeft: () => (
-						<FontAwesome
-							name="close"
+						<FontAwesome6
+							name="xmark"
 							size={24}
 							color={colors.text}
 							onPress={() => router.back()}
@@ -51,29 +51,31 @@ export default function Networks() {
 			/>
 			<ScrollView style={styles.container}>
 				<View style={styles.section}>
-					<ThemedText type="subtitle">{t("recentNetworks")}</ThemedText>
+					<ThemedText type="title">{t("recentNetworks")}</ThemedText>
 					{JSON.parse(recentNetworks as string).map((network: Network) => (
-						<NetworkCard
+						<InfoCard
 							key={network.id}
-							name={network.name}
-							url={network.url}
+							image={require("../assets/images/utah-flag.png")}
+							title={network.name}
+							additionalInfo={[{ label: t("address"), value: network.address }]}
 							onPress={() => console.log(network)}
 						/>
 					))}
 				</View>
 
 				<View style={styles.section}>
-					<ThemedText type="subtitle">{t("find")}</ThemedText>
+					<ThemedText type="title">{t("find")}</ThemedText>
 					<TextInput
 						style={[
 							styles.input,
 							{ backgroundColor: colors.card, color: colors.text },
+							{ borderColor: colors.border },
 						]}
-						placeholder={t("enterLocationOrAddress")}
+						placeholder={t("enterAddressOrLocation")}
 						placeholderTextColor={colors.text}
 					/>
 					<TouchableOpacity
-						style={[styles.button, { backgroundColor: colors.card }]}
+						style={[styles.button, { backgroundColor: colors.accent }]}
 						onPress={() => console.log("Use location")}
 					>
 						<ThemedText>{t("useLocation")}</ThemedText>
@@ -81,9 +83,9 @@ export default function Networks() {
 				</View>
 
 				<View style={styles.section}>
-					<ThemedText type="subtitle">{t("scanQrCode")}</ThemedText>
+					<ThemedText type="title">{t("scanQrCode")}</ThemedText>
 					<TouchableOpacity
-						style={[styles.button, { backgroundColor: colors.card }]}
+						style={[styles.button, { backgroundColor: colors.accent }]}
 						onPress={handleScanPress}
 					>
 						<ThemedText>{t("scan")}</ThemedText>
@@ -91,17 +93,18 @@ export default function Networks() {
 				</View>
 
 				<View style={styles.section}>
-					<ThemedText type="subtitle">{t("enterBootstrap")}</ThemedText>
+					<ThemedText type="title">{t("enterBootstrap")}</ThemedText>
 					<TextInput
 						style={[
 							styles.input,
 							{ backgroundColor: colors.card, color: colors.text },
+							{ borderColor: colors.border },
 						]}
 						placeholder={t("enterBootstrapPlaceholder")}
 						placeholderTextColor={colors.text}
 					/>
 					<TouchableOpacity
-						style={[styles.button, { backgroundColor: colors.card }]}
+						style={[styles.button, { backgroundColor: colors.accent }]}
 						onPress={() => console.log("Use bootstrap")}
 					>
 						<ThemedText>{t("useBootstrap")}</ThemedText>
@@ -125,6 +128,7 @@ const styles = StyleSheet.create({
 		padding: 16,
 		borderRadius: 32,
 		fontSize: 16,
+		borderWidth: 1,
 	},
 	button: {
 		marginTop: 8,

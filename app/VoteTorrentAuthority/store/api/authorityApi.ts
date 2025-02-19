@@ -6,42 +6,60 @@ const MOCK_AUTHORITIES: Authority[] = [
 		id: "1",
 		image: require("../../assets/images/utah-flag.png"),
 		title: "Utah State Elections",
-		subtitle: "State • Elections Commission",
+		domainName: "utah.gov",
+		cid: "QmZjkl4GIafds123",
+		address: "/dns/utah.gov/tcp/443/p2p/QmZjkls123",
+		signature: "[valid]",
 		isPinned: true,
 	},
 	{
 		id: "2",
 		image: require("../../assets/images/utah-flag.png"),
 		title: "Salt Lake County",
-		subtitle: "County • Elections Division",
+		domainName: "saltlakecounty.gov",
+		cid: "QmZjkl4GIafds123",
+		address: "/dns/saltlakecounty.gov/tcp/443/p2p/QmZjds123",
+		signature: "[valid]",
 		isPinned: true,
 	},
 	{
 		id: "3",
 		image: require("../../assets/images/utah-flag.png"),
 		title: "Provo City",
-		subtitle: "City • Municipal Elections",
+		domainName: "provo.gov",
+		cid: "QmZjkl4GIafds123",
+		address: "/dns/provo.gov/tcp/443/p2p/QmZjkl4GIafds123",
+		signature: "[valid]",
 		isPinned: true,
 	},
 	{
 		id: "4",
 		image: require("../../assets/images/utah-flag.png"),
 		title: "Weber County",
-		subtitle: "County • Elections Division",
+		domainName: "webercounty.gov",
+		cid: "QmZjkl4GIafds123",
+		address: "/dns/webercounty.gov/tcp/443/p2p/QmZjkl4GIafds123",
+		signature: "[valid]",
 		isPinned: false,
 	},
 	{
 		id: "5",
 		image: require("../../assets/images/utah-flag.png"),
 		title: "Logan City",
-		subtitle: "City • Municipal Elections",
+		domainName: "logancity.gov",
+		cid: "QmZjkl4GIafds123",
+		address: "/dns/logancity.gov/tcp/443/p2p/QmZjkl4GIafds123",
+		signature: "[valid]",
 		isPinned: false,
 	},
   {
     id: "6",
     image: require("../../assets/images/utah-flag.png"),
     title: "Orem City",
-    subtitle: "City • Municipal Elections",
+    domainName: "orem.gov",
+    cid: "QmZjkl4GIafds123",
+    address: "/dns/orem.gov/tcp/443/p2p/QmZjkl4GIafds123",
+    signature: "[valid]",
     isPinned: false,
   },
 ];
@@ -57,19 +75,24 @@ const p2pBaseQuery = () =>
         return { data: mockAuthorities };
       }
       
-      if (args.type === 'pinAuthority') {
+      if (args.type === 'pinToggleAuthority') {
         await new Promise(resolve => setTimeout(resolve, 200));
         mockAuthorities = mockAuthorities.map(authority => 
           authority.id === args.payload 
-            ? { ...authority, isPinned: true }
+            ? { ...authority, isPinned: !authority.isPinned }
             : authority
         );
-        return { data: true };
+        return { data: null };
       }
       
-      throw new Error('Unknown operation');
-    } catch (error) {
-      return { error };
+      throw new Error(`Unknown operation type: ${args.type}`);
+    } catch (error: any) {
+      return { 
+        error: { 
+          status: 'CUSTOM_ERROR',
+          data: error?.message ?? 'Unknown error'
+        }
+      };
     }
   };
 
@@ -82,9 +105,9 @@ export const authorityApi = createApi({
             query: () => ({ type: 'getAuthorities' }),
             providesTags: ['Authority'],
         }),
-        pinAuthority: builder.mutation<void, string>({
+        pinToggleAuthority: builder.mutation<void, string>({
             query: (id) => ({ 
-                type: 'pinAuthority',
+                type: 'pinToggleAuthority',
                 payload: id 
             }),
             // Optimistically update the cache
@@ -93,7 +116,7 @@ export const authorityApi = createApi({
                     authorityApi.util.updateQueryData('getAuthorities', undefined, (draft) => {
                         const authority = draft.find(a => a.id === id);
                         if (authority) {
-                            authority.isPinned = true;
+                            authority.isPinned = !authority.isPinned;
                         }
                     })
                 );
@@ -110,5 +133,5 @@ export const authorityApi = createApi({
 
 export const {
     useGetAuthoritiesQuery,
-    usePinAuthorityMutation,
+    usePinToggleAuthorityMutation,
 } = authorityApi;
